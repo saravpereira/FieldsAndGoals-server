@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 
-app.use("/api/todo", todoRoutes);
+app.use("/api/todos", todoRoutes);
 
 app.listen(8080, () => {
   console.log("listening on port 8080");
