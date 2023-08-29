@@ -19,8 +19,21 @@ async function main() {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get("/", (req, res) => {
-  res.send("hello world");
+// Set EJS as the view engine
+app.set("view engine", "ejs");
+
+app.get("/", async (req, res) => {
+  try {
+    // Fetch data from /scrape-espn endpoint
+    const response = await axios.get("http://localhost:8080/scrape-espn");
+    const headlines = response.data.headlines;
+
+    // Render the index.ejs template and pass the headlines
+    res.render("index", { headlines });
+  } catch (error) {
+    console.error("Error fetching headlines:", error);
+    res.render("index", { headlines: [] }); // Render with empty headlines
+  }
 });
 
 app.use("/api/todo", todoRoutes);
