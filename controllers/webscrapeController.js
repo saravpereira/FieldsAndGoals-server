@@ -1,10 +1,11 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
+const { url } = require("./constants");
 
 async function scrapeEspn(req, res) {
   try {
     console.log("Request received for /scrape-espn");
-    const response = await axios.get("https://www.espn.com");
+    const response = await axios.get(url);
     const $ = cheerio.load(response.data);
 
     const headlines = [];
