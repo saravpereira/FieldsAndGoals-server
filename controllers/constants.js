@@ -1,5 +1,6 @@
 // constants.js
 module.exports = {
-    url: "https://www.espn.com"
+    headlineUrl: "https://www.espn.com",
+    scoresURL: "https://www.espn.com/soccer/schedule"
   };
   
