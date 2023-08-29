@@ -1,12 +1,12 @@
 const axios = require("axios");
-const { Cheerio } = require("cheerio");
+const { scoresURL } = require("./constants")
 
 async function scrapeEspn(req, res) {
   try {
     const config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: 'https://site.web.api.espn.com/apis/v2/scoreboard/header?region=us&lang=en&contentorigin=espn&buyWindow=1m&showAirings=buy%2Clive%2Creplay&showZipLookup=true&tz=America%2FNew_York&_ceID=15878776',
+      url: scoresURL,
       headers: { 
         'authority': 'site.web.api.espn.com', 
         'accept': '*/*', 
