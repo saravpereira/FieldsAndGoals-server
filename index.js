@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 require("dotenv").config();
-const scrapeController = require("./controllers/scrapeController");
+const scrapeController = require("./controllers/webscrapeController");
 
 const app = express();
 const mongoose = require("mongoose");
@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/api/todo", todoRoutes);
 
-app.get("/", scrapeController.scrapeESPN);
+app.get("/", scrapeController.scrapeEspn);
 
 app.listen(8080, () => {
   console.log("listening on port 8080");

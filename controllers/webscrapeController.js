@@ -1,8 +1,7 @@
-// controller/scrapeController.js
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-async function scrapeESPN(req, res) {
+async function scrapeEspn(req, res) {
   try {
     console.log("Request received for /scrape-espn");
     const response = await axios.get("https://www.espn.com");
@@ -23,5 +22,5 @@ async function scrapeESPN(req, res) {
 }
 
 module.exports = {
-  scrapeESPN
+  scrapeEspn
 };
