@@ -11,10 +11,10 @@ async function scrapeEspn(req, res) {
     const page = await browser.newPage();
     await page.goto(sofascoreURL);
 
-    await page.waitForSelector(".sc-fqkvVR.sc-dcJsrY.ditMfZ.hNspbb.sc-2cf4ebd1-0.cLVSQH.js-list-cell-target.js-list-cell-target-11542832");
+    await page.waitForSelector(".sc-fqkvVR.byYarT");
 
     const matches = await page.evaluate(() => {
-      const matchElements = document.querySelectorAll(".sc-fqkvVR.sc-dcJsrY.ditMfZ.hNspbb.sc-2cf4ebd1-0.cLVSQH.js-list-cell-target.js-list-cell-target-11542832");
+      const matchElements = document.querySelectorAll(".sc-fqkvVR.byYarT");
       const matchData = [];
 
       matchElements.forEach((element) => {
