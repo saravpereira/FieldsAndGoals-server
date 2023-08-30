@@ -9,7 +9,16 @@ async function scrapeEspn(req, res) {
     const date = "20230827";
     const url = `${scoresURL}/_/date/${date}`;
 
-    const response = await axios.get(url);
+    // Introduce a random delay between 1 and 5 seconds
+    const randomDelay = Math.floor(Math.random() * 4000) + 1000;
+    await new Promise(resolve => setTimeout(resolve, randomDelay));
+
+    const response = await axios.get(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36'
+      }
+    });
+
     const html = response.data;
     const $ = cheerio.load(html);
 
