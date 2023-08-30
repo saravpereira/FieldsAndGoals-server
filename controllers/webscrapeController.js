@@ -6,7 +6,10 @@ async function scrapeEspn(req, res) {
   try {
     console.log("Request received");
 
-    const response = await axios.get(scoresURL);
+    const date = "20230827";
+    const url = `${scoresURL}/_/date/${date}`;
+
+    const response = await axios.get(url);
     const html = response.data;
     const $ = cheerio.load(html);
 
