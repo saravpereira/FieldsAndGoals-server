@@ -1,7 +1,7 @@
 // constants.js
 module.exports = {
     headlineUrl: "https://www.espn.com",
-    scoresURL: 'https://site.web.api.espn.com/apis/v2/scoreboard/header?region=us&lang=en&contentorigin=espn&buyWindow=1m&showAirings=buy%2Clive%2Creplay&showZipLookup=true&tz=America%2FNew_York&_ceID=15878776',
+    scoresURL: 'https://www.espn.com/soccer/scoreboard',
     sofascoreURL: 'https://www.sofascore.com'
   };
   

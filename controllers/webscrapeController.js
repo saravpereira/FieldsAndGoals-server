@@ -1,33 +1,23 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
-const puppeteer = require("puppeteer");
-const { sofascoreURL } = require("./constants");
+const { scoresURL } = require("./constants");
 
 async function scrapeEspn(req, res) {
   try {
     console.log("Request received");
-    
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto(sofascoreURL);
 
-    await page.waitForSelector(".sc-fqkvVR.byYarT");
+    const response = await axios.get(scoresURL);
+    const html = response.data;
+    const $ = cheerio.load(html);
 
-    const matches = await page.evaluate(() => {
-      const matchElements = document.querySelectorAll(".sc-fqkvVR.byYarT");
-      const matchData = [];
+    const matchData = [];
 
-      matchElements.forEach((element) => {
-        const matchText = element.innerText.trim();
-        matchData.push(matchText);
-      });
-
-      return matchData;
+    $(".Card.gameModules").each((index, element) => {
+      const matchText = $(element).text().trim();
+      matchData.push(matchText);
     });
 
-    await browser.close();
-
-    res.json({ matches });
+    res.json({ matches: matchData });
   } catch (error) {
     console.error("Error scraping:", error);
     res.status(500).json({ error: "Error scraping data" });
