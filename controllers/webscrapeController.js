@@ -24,9 +24,21 @@ async function scrapeEspn(req, res) {
 
     const matchData = [];
 
-    $(".Card.gameModules").each((index, element) => {
-      const matchText = $(element).text().trim();
-      matchData.push(matchText);
+    $(".Scoreboard__RowContainer").each((index, container) => {
+      const matchInfo = {};
+
+      matchInfo.league = $(container).find(".Card__Header__Title").text().trim();
+      matchInfo.homeTeam = $(container).find(".ScoreboardScoreCell__Item--home .ScoreCell__TeamName").text().trim();
+      matchInfo.awayTeam = $(container).find(".ScoreboardScoreCell__Item--away .ScoreCell__TeamName").text().trim();
+      matchInfo.homeScore = $(container).find(".ScoreboardScoreCell__Item--home .ScoreCell__Score").text().trim();
+      matchInfo.awayScore = $(container).find(".ScoreboardScoreCell__Item--away .ScoreCell__Score").text().trim();
+      matchInfo.matchStatus = $(container).find(".ScoreCell__Time").text().trim();
+
+      // Extracting and formatting form and notable events is more complex and may require additional logic.
+      // You need to find the appropriate elements and format the data as needed.
+      // You can use similar $(container).find(...) to extract form and notable events.
+
+      matchData.push(matchInfo);
     });
 
     res.json({ matches: matchData });
