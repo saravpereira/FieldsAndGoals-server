@@ -1,7 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const puppeteer = require("puppeteer");
-const { scoresURL } = require("./constants");
+const { sofascoreURL } = require("./constants");
 
 async function scrapeEspn(req, res) {
   try {
@@ -9,12 +9,12 @@ async function scrapeEspn(req, res) {
     
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.goto(scoresURL);
+    await page.goto(sofascoreURL);
 
-    await page.waitForSelector(".Card.gameModules");
+    await page.waitForSelector(".event-card-wrapper");
 
     const matches = await page.evaluate(() => {
-      const matchElements = document.querySelectorAll(".Card.gameModules");
+      const matchElements = document.querySelectorAll(".event-card-wrapper");
       const matchData = [];
 
       matchElements.forEach((element) => {
