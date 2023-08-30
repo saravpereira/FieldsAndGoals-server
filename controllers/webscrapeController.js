@@ -21,6 +21,7 @@ async function scrapeEspn(req, res) {
     });
 
     res.json({ matches: matchData });
+
   } catch (error) {
     console.error("Error scraping:", error);
     res.status(500).json({ error: "Error scraping data" });
