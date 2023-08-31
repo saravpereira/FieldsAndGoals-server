@@ -69,15 +69,18 @@ async function scrapeEspn(req, res) {
     $(".Scoreboard__RowContainer").each((index, container) => {
       const matchInfo = {};
 
-      matchInfo.matchDate = $(container).find(".Card__Header__Title.Card__Header__Title--no-theme").text().trim();
+      const matchDateArray = date.match(/(\d{4})(\d{2})(\d{2})/);
+      const formattedMatchDate = `${matchDateArray[1]}-${matchDateArray[2]}-${matchDateArray[3]}`;
+      matchInfo.matchDate = formattedMatchDate;
+
       matchInfo.league = $(container).closest(".Card").find(".Card__Header__Title").text().trim();
       matchInfo.homeTeam = $(container).find(".ScoreboardScoreCell__Item--home .ScoreCell__TeamName").text().trim();
       matchInfo.awayTeam = $(container).find(".ScoreboardScoreCell__Item--away .ScoreCell__TeamName").text().trim();
       matchInfo.homeScore = $(container).find(".ScoreboardScoreCell__Item--home .ScoreCell__Score").text().trim();
       matchInfo.awayScore = $(container).find(".ScoreboardScoreCell__Item--away .ScoreCell__Score").text().trim();
-      matchInfo.matchStatus = $(container).find(".ScoreCell__Time").text().trim();
+      matchInfo.matchStatus = $(container).find(".ScoreCell__Time").text().trim(); 
 
-      //Scrape team logos (not working)
+      //Scrape team logos (need attention)
       //matchInfo.homeLogo = $(container).find(".ScoreboardScoreCell__Item--home .ScoreboardScoreCell__Logo").attr("src");
       //matchInfo.awayLogo = $(container).find(".ScoreboardScoreCell__Item--away .ScoreboardScoreCell__Logo").attr("src");
 
