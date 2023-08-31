@@ -3,30 +3,32 @@ const { scoresURL } = require("./constants");
 
 async function scrapeEspn(req, res) {
   try {
-    console.log("Request received");
-
-    const date = "20230827";
-    const url = `${scoresURL}/_/date/${date}`;
+    const startDate = "20230827";
+    const endDate = "20230831";
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
     await page.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 7_4_0; like Mac OS X) AppleWebKit/534.49 (KHTML, like Gecko)  Chrome/53.0.1780.199 Mobile Safari/533.3');
 
-    await page.goto(url);
-    await page.waitForSelector(".Scoreboard__RowContainer");
+    const allMatchData = [];
 
-    const matchData = await page.evaluate(() => {
-      const matchData = [];
-      const date = "20230827";
+    for (let currentDate = startDate; currentDate <= endDate; currentDate++) {
+      const url = `${scoresURL}/_/date/${currentDate}`;
+      
+      await page.goto(url);
+      await page.waitForSelector(".Scoreboard__RowContainer");
 
-      const matchElements = document.querySelectorAll(".Scoreboard__RowContainer");
+      const matchData = await page.evaluate((date) => {
+        const matchData = [];
 
-      matchElements.forEach((container) => {
-        const matchInfo = {};
-    
-        matchInfo.matchDate = date;
-    
+        const matchElements = document.querySelectorAll(".Scoreboard__RowContainer");
+
+        matchElements.forEach((container) => {
+          const matchInfo = {};
+      
+          matchInfo.matchDate = date;
+          
         const leagueElement = container.closest(".Card")?.querySelector(".Card__Header__Title");
         matchInfo.league = leagueElement ? leagueElement.textContent.trim() : '';
     
@@ -50,16 +52,19 @@ async function scrapeEspn(req, res) {
     
         const awayLogoElement = container.querySelector(".ScoreboardScoreCell__Item--away .ScoreboardScoreCell__Logo");
         matchInfo.awayLogo = awayLogoElement ? awayLogoElement.getAttribute("src") : '';
-    
-        matchData.push(matchInfo);
-    });
+          
+          matchData.push(matchInfo);
+        });
 
-      return matchData;
-    });
+        return matchData;
+      }, currentDate);
+
+      allMatchData.push(...matchData);
+    }
 
     await browser.close();
 
-    res.json({ matches: matchData });
+    res.json({ matches: allMatchData });
   } catch (error) {
     console.error("Error scraping:", error);
     res.status(500).json({ error: "Error scraping data" });
