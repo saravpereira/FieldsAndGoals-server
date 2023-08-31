@@ -28,11 +28,10 @@ async function processRequestQueue() {
     try {
       const response = await axios.get(url, {
         headers: {
-          'User-Agent': 'Your-User-Agent-String'
+          'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 7_4_0; like Mac OS X) AppleWebKit/534.49 (KHTML, like Gecko)  Chrome/53.0.1780.199 Mobile Safari/533.3'
         }
       });
 
-      // Process the response as needed
       resolve(response);
     } catch (error) {
       console.error("Error making request:", error);
@@ -80,9 +79,8 @@ async function scrapeEspn(req, res) {
       matchInfo.awayScore = $(container).find(".ScoreboardScoreCell__Item--away .ScoreCell__Score").text().trim();
       matchInfo.matchStatus = $(container).find(".ScoreCell__Time").text().trim(); 
 
-      //Scrape team logos (need attention)
-      //matchInfo.homeLogo = $(container).find(".ScoreboardScoreCell__Item--home .ScoreboardScoreCell__Logo").attr("src");
-      //matchInfo.awayLogo = $(container).find(".ScoreboardScoreCell__Item--away .ScoreboardScoreCell__Logo").attr("src");
+      matchInfo.homeLogo = $(container).find(".ScoreboardScoreCell__Item--home .ScoreboardScoreCell__Logo").attr("src");
+      matchInfo.awayLogo = $(container).find(".ScoreboardScoreCell__Item--away .ScoreboardScoreCell__Logo").attr("src");
 
       matchData.push(matchInfo);
     });
