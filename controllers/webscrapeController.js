@@ -2,6 +2,45 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const { scoresURL } = require("./constants");
 
+const MIN_DELAY = 1000;
+const MAX_DELAY = 5000;
+const MAX_CONCURRENT_REQUESTS = 5;
+
+let lastRequestTimestamp = 0;
+let requestQueue = [];
+
+async function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function processRequestQueue() {
+  while (requestQueue.length > 0) {
+    const { url, resolve } = requestQueue.shift();
+    const now = Date.now();
+    const timeSinceLastRequest = now - lastRequestTimestamp;
+    const delayTime = Math.max(MIN_DELAY, Math.min(MAX_DELAY, MAX_DELAY - timeSinceLastRequest));
+
+    if (timeSinceLastRequest < MAX_DELAY && requestQueue.length >= MAX_CONCURRENT_REQUESTS) {
+      await delay(delayTime);
+    }
+
+    lastRequestTimestamp = Date.now();
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          'User-Agent': 'Your-User-Agent-String'
+        }
+      });
+
+      // Process the response as needed
+      resolve(response);
+    } catch (error) {
+      console.error("Error making request:", error);
+      resolve(null);
+    }
+  }
+}
+
 async function scrapeEspn(req, res) {
   try {
     console.log("Request received");
@@ -9,24 +48,28 @@ async function scrapeEspn(req, res) {
     const date = "20230827";
     const url = `${scoresURL}/_/date/${date}`;
 
-    // Introduce a random delay between 1 and 5 seconds
-    const randomDelay = Math.floor(Math.random() * 4000) + 1000;
-    await new Promise(resolve => setTimeout(resolve, randomDelay));
-
-    const response = await axios.get(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36'
-      }
+    const requestPromise = new Promise(resolve => {
+      requestQueue.push({ url, resolve });
     });
+
+    await processRequestQueue();
+
+    const response = await requestPromise;
+
+    if (response === null) {
+      res.status(500).json({ error: "Error scraping data" });
+      return;
+    }
 
     const html = response.data;
     const $ = cheerio.load(html);
 
     const matchData = [];
-
+    
     $(".Scoreboard__RowContainer").each((index, container) => {
       const matchInfo = {};
 
+      matchInfo.matchDate = $(container).find(".Card__Header__Title.Card__Header__Title--no-theme").text().trim();
       matchInfo.league = $(container).closest(".Card").find(".Card__Header__Title").text().trim();
       matchInfo.homeTeam = $(container).find(".ScoreboardScoreCell__Item--home .ScoreCell__TeamName").text().trim();
       matchInfo.awayTeam = $(container).find(".ScoreboardScoreCell__Item--away .ScoreCell__TeamName").text().trim();
@@ -34,6 +77,7 @@ async function scrapeEspn(req, res) {
       matchInfo.awayScore = $(container).find(".ScoreboardScoreCell__Item--away .ScoreCell__Score").text().trim();
       matchInfo.matchStatus = $(container).find(".ScoreCell__Time").text().trim();
 
+      //Scrape team logos (not working)
       //matchInfo.homeLogo = $(container).find(".ScoreboardScoreCell__Item--home .ScoreboardScoreCell__Logo").attr("src");
       //matchInfo.awayLogo = $(container).find(".ScoreboardScoreCell__Item--away .ScoreboardScoreCell__Logo").attr("src");
 
