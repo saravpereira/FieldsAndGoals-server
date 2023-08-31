@@ -1,44 +1,5 @@
-const axios = require("axios");
 const puppeteer = require("puppeteer");
 const { scoresURL } = require("./constants");
-
-const MIN_DELAY = 1000;
-const MAX_DELAY = 5000;
-const MAX_CONCURRENT_REQUESTS = 5;
-
-let lastRequestTimestamp = 0;
-let requestQueue = [];
-
-async function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function processRequestQueue() {
-  while (requestQueue.length > 0) {
-    const { url, resolve } = requestQueue.shift();
-    const now = Date.now();
-    const timeSinceLastRequest = now - lastRequestTimestamp;
-    const delayTime = Math.max(MIN_DELAY, Math.min(MAX_DELAY, MAX_DELAY - timeSinceLastRequest));
-
-    if (timeSinceLastRequest < MAX_DELAY && requestQueue.length >= MAX_CONCURRENT_REQUESTS) {
-      await delay(delayTime);
-    }
-
-    lastRequestTimestamp = Date.now();
-    try {
-      const response = await axios.get(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; MSIE 7.0; Windows; U; Windows NT 10.0; x64 Trident/4.0)'
-        }
-      });
-
-      resolve(response);
-    } catch (error) {
-      console.error("Error making request:", error);
-      resolve(null);
-    }
-  }
-}
 
 async function scrapeEspn(req, res) {
   try {
@@ -50,7 +11,6 @@ async function scrapeEspn(req, res) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    // Set a user agent for the page
     await page.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 7_4_0; like Mac OS X) AppleWebKit/534.49 (KHTML, like Gecko)  Chrome/53.0.1780.199 Mobile Safari/533.3');
 
     await page.goto(url);
