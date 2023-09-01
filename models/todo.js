@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-//sample for testing
 const todoSchema = mongoose.Schema({
   matchDate: {
     type: String,
