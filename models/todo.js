@@ -39,7 +39,7 @@ const todoSchema = mongoose.Schema({
         type: String,
         required: true,
       },
-    },
+    }
   ],
 });
 

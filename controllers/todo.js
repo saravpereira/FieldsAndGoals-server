@@ -1,22 +1,33 @@
 const Todo = require("../models/todo");
 
 exports.createTodo = (req, res, next) => {
-  const matchData = {
-    matchDate: req.body.matchDate,
-    league: req.body.league,
-    homeTeam: req.body.homeTeam,
-    awayTeam: req.body.awayTeam,
-    homeScore: req.body.homeScore,
-    awayScore: req.body.awayScore,
-    matchStatus: req.body.matchStatus,
-    homeLogo: req.body.homeLogo,
-    awayLogo: req.body.awayLogo,
-  };
+  const matchesData = req.body.matches; // Assuming req.body.matches is an array of match objects
 
-  Todo.findOne({}, (err, todo) => {
-    if (err) {
-      return res.status(500).json({
-        message: "Failed to create match data",
+  const todo = new Todo({
+    matches: matchesData.map((matchData) => ({
+      matchDate: matchData.matchDate,
+      league: matchData.league,
+      homeTeam: matchData.homeTeam,
+      awayTeam: matchData.awayTeam,
+      homeScore: matchData.homeScore,
+      awayScore: matchData.awayScore,
+      matchStatus: matchData.matchStatus,
+      homeLogo: matchData.homeLogo,
+      awayLogo: matchData.awayLogo,
+    })),
+  });
+
+  todo
+    .save()
+    .then((result) => {
+      res.status(201).json({
+        message: "Match data added successfully",
+        matches: result.matches,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: "Failed to add match data",
         error: err,
       });
     }
