@@ -3,8 +3,8 @@ const { scoresURL } = require("./constants");
 
 async function scrapeEspn(req, res) {
   try {
-    const startDate = "20230901";
-    const endDate = "20230902";
+    const startDate = "20230831";
+    const endDate = "20230831";
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
