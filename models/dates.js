@@ -1,7 +1,13 @@
-const startDate = "20230827";
-const endDate = "20230901";
+function getDateRange() {
+  const startDate = "20230831";
+  const endDate = "20230901";
 
-module.exports = {
+  return {
     startDate,
     endDate
   };
+}
+
+module.exports = {
+  getDateRange
+};

@@ -2,9 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const scrapeController = require("./controllers/webscrapeController");
-const { yesterdayDate } = require("./models/yesterday");
-const { startDate, endDate } = require("./models/dates");
+const { getYesterdayDate } = require("./models/yesterday");
+const { getDateRange } = require("./models/dates");
 
+const { startDate, endDate } = getDateRange();
+const yesterdayDate = getYesterdayDate();
 const mongoose = require("mongoose");
 
 async function main() {
