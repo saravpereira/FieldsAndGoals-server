@@ -1,16 +1,20 @@
 const Todo = require("../models/todo");
 
 exports.createTodo = (req, res, next) => {
+  const matchesData = req.body.matches; // Assuming req.body.matches is an array of match objects
+
   const todo = new Todo({
-    matchDate: req.body.matchDate,
-    league: req.body.league,
-    homeTeam: req.body.homeTeam,
-    awayTeam: req.body.awayTeam,
-    homeScore: req.body.homeScore,
-    awayScore: req.body.awayScore,
-    matchStatus: req.body.matchStatus,
-    homeLogo: req.body.homeLogo,
-    awayLogo: req.body.awayLogo,
+    matches: matchesData.map((matchData) => ({
+      matchDate: matchData.matchDate,
+      league: matchData.league,
+      homeTeam: matchData.homeTeam,
+      awayTeam: matchData.awayTeam,
+      homeScore: matchData.homeScore,
+      awayScore: matchData.awayScore,
+      matchStatus: matchData.matchStatus,
+      homeLogo: matchData.homeLogo,
+      awayLogo: matchData.awayLogo,
+    })),
   });
 
   todo
@@ -18,10 +22,7 @@ exports.createTodo = (req, res, next) => {
     .then((result) => {
       res.status(201).json({
         message: "Match data added successfully",
-        match: {
-          ...result._doc,
-          id: result._id,
-        },
+        matches: result.matches,
       });
     })
     .catch((err) => {

@@ -60,6 +60,14 @@ async function scrapeEspn(req, res) {
           const awayLogoElement = container.querySelector(".ScoreboardScoreCell__Item--away .ScoreboardScoreCell__Logo");
           matchInfo.awayLogo = awayLogoElement ? awayLogoElement.getAttribute("src") : '';
 
+          if (matchInfo.homeScore === '') {
+            matchInfo.homeScore = ' ';
+          }
+        
+          if (matchInfo.awayScore === '') {
+            matchInfo.awayScore = ' ';
+          }
+
           if (!matchInfo.homeLogo) {
             matchInfo.homeLogo = 'https://www.seekpng.com/png/full/28-289657_espn-soccer-team-logo-default.png';
           }
