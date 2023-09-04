@@ -13,13 +13,10 @@ async function main() {
     
     const app = express();
 
-    app.use(express.json({ limit: '25mb' }));
-    app.use(express.urlencoded({ limit: '25mb' }));
-
     app.use("/api/todo", require("./routes/todo.js"));
 
-    app.get("/getDataByDates", () => {
-      scrapeController.scrapeEspn(startDate, endDate);
+    app.get("/getDataByDates", (req, res) => {
+      scrapeController.scrapeEspn(startDate, endDate, req, res);
     });
 
     app.listen(8080, () => {

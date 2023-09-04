@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const { scoresURL } = require("./constants");
 
-async function scrapeEspn(startDate, endDate) {
+async function scrapeEspn(startDate, endDate, req, res) {
   try {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
