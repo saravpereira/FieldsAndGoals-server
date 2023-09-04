@@ -1,27 +1,33 @@
-const bodyParser = require("body-parser");
 const express = require("express");
 require("dotenv").config();
-const app = express();
-const mongoose = require("mongoose");
-const todoRoutes = require("./routes/todo.js");
+const scrapeController = require("./controllers/webscrapeController");
+const { getDateRange } = require("./models/dates");
 
-main()
-  .then((res) => console.log(res))
-  .catch((err) => console.log(err));
+const { startDate, endDate } = getDateRange();
+const mongoose = require("mongoose");
 
 async function main() {
-  await mongoose.connect(process.env.DB);
+  try {
+    await mongoose.connect(process.env.DB);
+    console.log("Connected to the database");
+    
+    const app = express();
+
+    app.use(express.json({ limit: '25mb' }));
+    app.use(express.urlencoded({ limit: '25mb' }));
+
+    app.use("/api/todo", require("./routes/todo.js"));
+
+    app.get("/getDataByDates", () => {
+      scrapeController.scrapeEspn(startDate, endDate);
+    });
+
+    app.listen(8080, () => {
+      console.log("Server listening on port 8080");
+    });
+  } catch (error) {
+    console.error("Error connecting to the database:", error);
+  }
 }
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
-
-app.use("/api/todos", todoRoutes);
-
-app.listen(8080, () => {
-  console.log("listening on port 8080");
-});
+main();
