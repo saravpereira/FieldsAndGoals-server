@@ -1,6 +1,5 @@
 const puppeteer = require("puppeteer");
 const { espnUrl, espnScoreUrl } = require("./constants");
-const axios = require('axios');
 
 async function scrapeEspn(startDate, endDate, req, res) {
   try {
