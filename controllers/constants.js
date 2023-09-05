@@ -1,5 +1,4 @@
-module.exports = {
-    headlineUrl: "https://www.espn.com",
-    scoresURL: 'https://www.espn.com/soccer/scoreboard',
-  };
-  
+const espnUrl = "https://www.espn.com";
+const espnScoreUrl = `${espnUrl}/soccer/scoreboard`;
+
+module.exports = { espnUrl, espnScoreUrl };
