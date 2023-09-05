@@ -4,25 +4,26 @@ const scrapeController = require("./controllers/webscrapeController");
 const { getDateRange } = require("./models/dates");
 const mongoose = require("mongoose");
 
-//If no parameters are provided, by default, startDate is today and endDate is 7 days from today
-//If only one parameter is provided, getDateRange() by default sets that parameter as startDate and endDate 7 days from startDate
-const { startDate, endDate } = getDateRange("20230901", "20230905");
+mongoose.connect(process.env.DB);
+console.log("Connected to the database");
 
-async function main() {
-  await mongoose.connect(process.env.DB);
-  console.log("Connected to the database");
-  
-  const app = express();
+const app = express();
 
-  app.use("/api/todo", require("./routes/todo.js"));
+app.use("/api/todo", require("./routes/todo.js"));
 
-  app.get("/espn/getGamesByDates", (req, res) => {
-    scrapeController.scrapeEspn(startDate, endDate, req, res);
-  });
+app.get("/espn/getGamesByDates", (req, res) => {
+  /**
+   * User can specify startDate and endDate by appending them as query parameters:
+   * http://localhost:8080/espn/getGamesByDates?startDate=20230901&endDate=20230905
+   */
+  const userStartDate = req.query.startDate;
+  const userEndDate = req.query.endDate;
 
-  app.listen(8080, () => {
-    console.log("Server listening on port 8080");
-  });
-}
+  const { startDate, endDate } = getDateRange(userStartDate, userEndDate);
 
-main();
+  scrapeController.scrapeEspn(startDate, endDate, req, res);
+});
+
+app.listen(8080, () => {
+  console.log("Server listening on port 8080");
+});
