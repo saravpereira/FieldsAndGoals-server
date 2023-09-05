@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const scrapeController = require("./controllers/webscrapeController");
-const { getDateRange } = require("./models/dates");
+const { getDateRange } = require("./utils/dateUtils");
 
 async function main() {
   await mongoose.connect(process.env.DB);
@@ -26,7 +26,7 @@ app.get("/espn/getGamesByDates", (req, res) => {
 
   try {
     const { startDate, endDate } = getDateRange(userEndDate);
-    scrapeController.scrapeEspn(startDate, endDate, req, res);
+    scrapeController.scrapeEspn(startDate, endDate, res);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

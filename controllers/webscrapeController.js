@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
-const { espnUrl, espnScoreUrl } = require("./constants");
+const { espnScoreUrl } = require("./constants");
 
-async function scrapeEspn(startDate, endDate, req, res) {
+async function scrapeEspn(startDate, endDate, res) {
   try {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -53,7 +53,7 @@ async function scrapeEspn(startDate, endDate, req, res) {
           matchInfo.matchDate = matchDateObj.toLocaleDateString('en-US', options);
           
           const leagueElement = container.closest(".Card")?.querySelector(".Card__Header__Title");
-          matchInfo.league = leagueElement ? leagueElement.textContent.trim() : '';
+          matchInfo.league = leagueElement?.textContent?.trim() ?? '';
     
           const homeTeamElement = container.querySelector(".ScoreboardScoreCell__Item--home .ScoreCell__TeamName");
           matchInfo.homeTeam = homeTeamElement ? homeTeamElement.textContent.trim() : '';
