@@ -36,7 +36,7 @@ app.get("/espn/getGamesByDates", (req, res) => {
   }
 });
 
-app.get("/yesterday", async (req, res) => {
+app.get("/espn/getPastResults", async (req, res) => {
   try {
     const allMatchData = await scrapeController.scrapeEspn(yesterdayDate, yesterdayDate, res);
 

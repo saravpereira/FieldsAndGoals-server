@@ -1,6 +1,6 @@
 const Todo = require("../models/todo");
 
-exports.createTodo = (req, res, next) => {
+exports.createTodo = (req, res) => {
   const matchesData = req.body.matches;
 
   const todo = new Todo({
