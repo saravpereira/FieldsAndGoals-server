@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { espnScoreUrl } = require("./constants");
+const { espnScoreUrl, defaultLogo } = require("./constants");
 
 async function scrapeEspn(startDate, endDate, res) {
   try {
@@ -35,7 +35,7 @@ async function scrapeEspn(startDate, endDate, res) {
       await page.goto(url);
       await page.waitForSelector(".Scoreboard__RowContainer", { timeout: 120000 });
 
-      const matchData = await page.evaluate((date) => {
+      const matchData = await page.evaluate((date, defaultLogo) => {
         const matchData = [];
       
         const matchElements = document.querySelectorAll(".Scoreboard__RowContainer");
@@ -56,32 +56,32 @@ async function scrapeEspn(startDate, endDate, res) {
           matchInfo.league = leagueElement?.textContent?.trim() ?? '';
     
           const homeTeamElement = container.querySelector(".ScoreboardScoreCell__Item--home .ScoreCell__TeamName");
-          matchInfo.homeTeam = homeTeamElement ? homeTeamElement.textContent.trim() : '';
+          matchInfo.homeTeam = homeTeamElement?.textContent?.trim() ?? '';
     
           const awayTeamElement = container.querySelector(".ScoreboardScoreCell__Item--away .ScoreCell__TeamName");
-          matchInfo.awayTeam = awayTeamElement ? awayTeamElement.textContent.trim() : '';
+          matchInfo.awayTeam = awayTeamElement?.textContent?.trim() ?? '';
     
           const homeScoreElement = container.querySelector(".ScoreboardScoreCell__Item--home .ScoreCell__Score");
-          matchInfo.homeScore = homeScoreElement ? homeScoreElement.textContent.trim() : ' ';
+          matchInfo.homeScore = homeScoreElement?.textContent?.trim() ?? ' ';
     
           const awayScoreElement = container.querySelector(".ScoreboardScoreCell__Item--away .ScoreCell__Score");
-          matchInfo.awayScore = awayScoreElement ? awayScoreElement.textContent.trim() : ' ';
+          matchInfo.awayScore = awayScoreElement?.textContent?.trim() ?? ' ';
     
           const matchStatusElement = container.querySelector(".ScoreCell__Time");
-          matchInfo.matchStatus = matchStatusElement ? matchStatusElement.textContent.trim() : '';
+          matchInfo.matchStatus = matchStatusElement?.textContent?.trim() ?? '';
     
           const homeLogoElement = container.querySelector(".ScoreboardScoreCell__Item--home .ScoreboardScoreCell__Logo");
-          matchInfo.homeLogo = homeLogoElement ? homeLogoElement.getAttribute("src") : ' ';
+          matchInfo.homeLogo = homeLogoElement?.getAttribute("src") ?? '';
     
           const awayLogoElement = container.querySelector(".ScoreboardScoreCell__Item--away .ScoreboardScoreCell__Logo");
-          matchInfo.awayLogo = awayLogoElement ? awayLogoElement.getAttribute("src") : ' ';
+          matchInfo.awayLogo = awayLogoElement?.getAttribute("src") ?? '';
 
           if (!matchInfo.homeLogo) {
-            matchInfo.homeLogo = 'https://www.seekpng.com/png/full/28-289657_espn-soccer-team-logo-default.png';
+            matchInfo.homeLogo = defaultLogo;
           }
         
           if (!matchInfo.awayLogo) {
-            matchInfo.awayLogo = 'https://www.seekpng.com/png/full/28-28957_espn-soccer-team-logo-default.png';
+            matchInfo.awayLogo = defaultLogo;
           }
           
           matchData.push(matchInfo);
