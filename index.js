@@ -22,7 +22,7 @@ app.use(express.json());
 app.get("/espn/getGamesByDates", (req, res) => {
   /**
    * User can specify endDate by appending it as a query parameter:
-   * http://localhost:8080/espn/getGamesByDates?endDate=20230908
+   * http://localhost:8080/espn/getGamesByDates?endDate=20230910
    */
   const userEndDate = req.query.endDate;
 
@@ -34,7 +34,7 @@ app.get("/espn/getGamesByDates", (req, res) => {
   }
 });
 
-app.get("/espn/getPastResults", async (req, res) => {
+app.get("/espn/getPastResults", async (_, res) => {
   try {
     const allMatchData = await scrapeController.scrapeEspn(yesterdayDate, yesterdayDate);
   
