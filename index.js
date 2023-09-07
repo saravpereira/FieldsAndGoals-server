@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const scrapeController = require("./controllers/webscrapeController");
 const { getDateRange, getYesterdayDate } = require("./utils/dateUtils");
-const { postData } = require('./utils/postData');
+const { postData } = require('./routes/postData');
 
 const yesterdayDate = getYesterdayDate();
 
@@ -18,8 +18,6 @@ main()
 
 const app = express();
 app.use(express.json());
-
-app.use("/api/todo", require("./routes/todo.js"));
 
 app.get("/espn/getGamesByDates", (req, res) => {
   /**
@@ -39,7 +37,7 @@ app.get("/espn/getGamesByDates", (req, res) => {
 app.get("/espn/getPastResults", async (req, res) => {
   try {
     const allMatchData = await scrapeController.scrapeEspn(yesterdayDate, yesterdayDate, res);
-
+  
     const postSuccess = await postData(allMatchData);
     if (postSuccess) {
       const successMessage = 'Successfully posted data';

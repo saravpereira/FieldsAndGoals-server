@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const todoSchema = mongoose.Schema(
+const matchSchema = mongoose.Schema(
   {
     matches: [
       {
@@ -46,4 +46,4 @@ const todoSchema = mongoose.Schema(
   { collection: "sampleMatchData"}
 );
 
-module.exports = mongoose.model("Todo", todoSchema);
+module.exports = mongoose.model("Match", matchSchema);
