@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const { espnScoreUrl, defaultLogo } = require("./constants");
 
-async function scrapeEspn(startDate, endDate, req, res) {
+async function scrapeEspn(startDate, endDate, res) {
   try {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();

@@ -28,7 +28,7 @@ app.get("/espn/getGamesByDates", (req, res) => {
 
   try {
     const { startDate, endDate } = getDateRange(userEndDate);
-    scrapeController.scrapeEspn(startDate, endDate, req, res);
+    scrapeController.scrapeEspn(startDate, endDate, res);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -36,7 +36,7 @@ app.get("/espn/getGamesByDates", (req, res) => {
 
 app.get("/espn/getPastResults", async (req, res) => {
   try {
-    const allMatchData = await scrapeController.scrapeEspn(yesterdayDate, yesterdayDate, res);
+    const allMatchData = await scrapeController.scrapeEspn(yesterdayDate, yesterdayDate);
   
     const postSuccess = await postData(allMatchData);
     if (postSuccess) {
