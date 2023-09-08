@@ -1,5 +1,5 @@
 const MatchData = require("../models/match");
-const { getDateRange, getYesterdayDate } = require("../utils/dateUtils");
+const { getDateRange, getYesterdayDate, formatDateToLongString } = require("../utils/dateUtils");
 const scrapeController = require("./webscrapeController");
 
 const yesterdayDate = getYesterdayDate();
@@ -73,5 +73,26 @@ exports.getResultsByDates = async (req, res) => {
     res.status(200).json(scrapedData);
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+};
+
+// Sample query: http://localhost:8080/espn/getMatchesByDate?date=September%207,%202023
+exports.getMatchesByDate = async (req, res) => {
+  let queryDate = req.query.date;
+  
+  if (!queryDate) {
+    const yesterdayDate = getYesterdayDate();
+    queryDate = formatDateToLongString(yesterdayDate);
+  }
+
+  try {
+    const matches = await MatchData.find({ "matches.matchDate": queryDate });
+    if (matches.length > 0) {
+      res.status(200).json(matches);
+    } else {
+      res.status(404).json({ message: "No matches found for the given date" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
