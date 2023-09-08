@@ -1,5 +1,5 @@
 const MatchData = require("../models/match");
-const { getYesterdayDate } = require("../utils/dateUtils");
+const { getDateRange, getYesterdayDate } = require("../utils/dateUtils");
 const { postData } = require('./postData');
 const scrapeController = require("./webscrapeController");
 
@@ -52,5 +52,21 @@ exports.getPastResults = async (_, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
+  }
+};
+
+/**
+   * User can specify endDate by appending it as a query parameter:
+   * http://localhost:8080/espn/getGamesByDates?endDate=20230910
+   */
+exports.getResultsByDates = async (req, res) => {
+  const userEndDate = req.query.endDate;
+
+  try {
+    const { startDate, endDate } = getDateRange(userEndDate);
+    const scrapedData = await scrapeController.scrapeEspn(startDate, endDate);
+    res.status(200).json(scrapedData);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 };
