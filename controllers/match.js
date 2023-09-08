@@ -1,6 +1,5 @@
 const MatchData = require("../models/match");
 const { getDateRange, getYesterdayDate } = require("../utils/dateUtils");
-const { postData } = require('./postData');
 const scrapeController = require("./webscrapeController");
 
 const yesterdayDate = getYesterdayDate();
@@ -41,23 +40,29 @@ exports.createMatch = (req, res) => {
 exports.getPastResults = async (_, res) => {
   try {
     const allMatchData = await scrapeController.scrapeEspn(yesterdayDate, yesterdayDate);
-    const postSuccess = await postData(allMatchData);
-    if (postSuccess) {
+
+    const newMatch = new MatchData({
+      matches: allMatchData
+    });
+
+    const savedMatch = await newMatch.save();
+
+    if (savedMatch) {
       const successMessage = 'Successfully posted data';
-      console.log(successMessage);
+      console.log(successMessage, savedMatch);
       res.status(200).json({ message: successMessage });
     } else {
       res.status(500).json({ error: 'Failed to post data' });
     }
   } catch (error) {
-    console.error(error);
+    console.error('Error saving data to database:', error);
     res.status(500).json({ error: error.message });
   }
 };
 
 /**
    * User can specify endDate by appending it as a query parameter:
-   * http://localhost:8080/espn/getGamesByDates?endDate=20230910
+   * http://localhost:8080/espn/getGamesByDates?endDate=20230912
    */
 exports.getResultsByDates = async (req, res) => {
   const userEndDate = req.query.endDate;
