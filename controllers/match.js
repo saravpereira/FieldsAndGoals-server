@@ -1,6 +1,6 @@
 const MatchData = require("../models/match");
 
-exports.createMatchData = (req, res) => {
+exports.createMatch = (req, res) => {
   const matchesData = req.body.matches;
 
   const matchData = new MatchData({

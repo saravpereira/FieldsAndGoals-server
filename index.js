@@ -4,7 +4,8 @@ require("dotenv").config();
 
 const scrapeController = require("./controllers/webscrapeController");
 const { getDateRange, getYesterdayDate } = require("./utils/dateUtils");
-const { postData } = require('./routes/postData');
+const { postData } = require('./controllers/postData');
+const matchRoutes = require('./routes/match');
 
 const yesterdayDate = getYesterdayDate();
 
@@ -33,6 +34,8 @@ app.get("/espn/getGamesByDates", (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+app.use('/espn/getPastResults', matchRoutes);
 
 app.get("/espn/getPastResults", async (_, res) => {
   try {

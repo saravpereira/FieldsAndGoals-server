@@ -1,15 +1,15 @@
-const Todo = require('../models/match');
+const Match = require('../models/match');
 
 async function postData(allMatchData) {
   try {
-    const newTodo = new Todo({
+    const newMatch = new Match({
       matches: allMatchData
     });
 
-    const savedTodo = await newTodo.save();
+    const savedMatch = await newMatch.save();
 
-    if (savedTodo) {
-      console.log('Data saved to database:', savedTodo);
+    if (savedMatch) {
+      console.log('Data saved to database:', savedMatch);
       return true;
     } else {
       return false;
