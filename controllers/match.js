@@ -1,4 +1,9 @@
 const MatchData = require("../models/match");
+const { getYesterdayDate } = require("../utils/dateUtils");
+const { postData } = require('./postData');
+const scrapeController = require("./webscrapeController");
+
+const yesterdayDate = getYesterdayDate();
 
 exports.createMatch = (req, res) => {
   const matchesData = req.body.matches;
@@ -31,4 +36,21 @@ exports.createMatch = (req, res) => {
         error: err,
       });
     });
+};
+
+exports.getPastResults = async (_, res) => {
+  try {
+    const allMatchData = await scrapeController.scrapeEspn(yesterdayDate, yesterdayDate);
+    const postSuccess = await postData(allMatchData);
+    if (postSuccess) {
+      const successMessage = 'Successfully posted data';
+      console.log(successMessage);
+      res.status(200).json({ message: successMessage });
+    } else {
+      res.status(500).json({ error: 'Failed to post data' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
 };

@@ -3,11 +3,9 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const scrapeController = require("./controllers/webscrapeController");
-const { getDateRange, getYesterdayDate } = require("./utils/dateUtils");
-const { postData } = require('./controllers/postData');
+const { getDateRange } = require("./utils/dateUtils");
 const matchRoutes = require('./routes/match');
 
-const yesterdayDate = getYesterdayDate();
 
 async function main() {
   await mongoose.connect(process.env.DB);
@@ -36,25 +34,6 @@ app.get("/espn/getGamesByDates", (req, res) => {
 });
 
 app.use('/api/match', matchRoutes);
-
-app.get("/espn/getPastResults", async (_, res) => {
-  try {
-    const allMatchData = await scrapeController.scrapeEspn(yesterdayDate, yesterdayDate);
-  
-    const postSuccess = await postData(allMatchData);
-    if (postSuccess) {
-      const successMessage = 'Successfully posted data';
-      console.log(successMessage);
-      res.status(200).json({ message: successMessage });
-    } else {
-      res.status(500).json({ error: 'Failed to post data' });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
 
 app.listen(8080, () => {
   console.log("Server listening on port 8080");
