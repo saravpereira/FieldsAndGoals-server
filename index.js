@@ -35,7 +35,7 @@ app.get("/espn/getGamesByDates", (req, res) => {
   }
 });
 
-app.use('/espn/getPastResults', matchRoutes);
+app.use('/api/match', matchRoutes);
 
 app.get("/espn/getPastResults", async (_, res) => {
   try {
