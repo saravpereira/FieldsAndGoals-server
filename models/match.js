@@ -43,7 +43,7 @@ const matchSchema = mongoose.Schema(
       },
     ],
   },
-  { collection: "sampleMatchData"}
+  { collection: "MatchData" }
 );
 
 module.exports = mongoose.model("Match", matchSchema);
