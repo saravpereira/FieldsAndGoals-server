@@ -35,7 +35,7 @@ async function scrapeEspn(startDate, endDate, res) {
       await page.goto(url);
       await page.waitForSelector(".Scoreboard__RowContainer", { timeout: 120000 });
 
-      const matchData = await page.evaluate((date, defaultLogo) => {
+      const matchData = await page.evaluate((date) => {
         const matchData = [];
       
         const matchElements = document.querySelectorAll(".Scoreboard__RowContainer");
@@ -75,20 +75,21 @@ async function scrapeEspn(startDate, endDate, res) {
     
           const awayLogoElement = container.querySelector(".ScoreboardScoreCell__Item--away .ScoreboardScoreCell__Logo");
           matchInfo.awayLogo = awayLogoElement?.getAttribute("src") ?? '';
-
-          if (!matchInfo.homeLogo) {
-            matchInfo.homeLogo = defaultLogo;
-          }
-        
-          if (!matchInfo.awayLogo) {
-            matchInfo.awayLogo = defaultLogo;
-          }
           
           matchData.push(matchInfo);
         });
 
         return matchData;
       }, currentDate);
+
+      matchData.forEach(matchInfo => {
+        if (!matchInfo.homeLogo) {
+          matchInfo.homeLogo = defaultLogo;
+        }
+        if (!matchInfo.awayLogo) {
+          matchInfo.awayLogo = defaultLogo;
+        }
+      });
 
       allMatchData.push(...matchData);
       current.setDate(current.getDate() + 1);
