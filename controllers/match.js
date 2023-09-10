@@ -76,18 +76,20 @@ exports.getResultsByDates = async (req, res) => {
   }
 };
 
-// Sample query: http://localhost:8080/espn/getMatchesByDate?date=September%207,%202023
+// Sample query: http://localhost:8080/espn/getMatchesByDate?date=20230907
 exports.getMatchesByDate = async (req, res) => {
   let queryDate = req.query.date;
   
   if (!queryDate) {
     const yesterdayDate = getYesterdayDate();
     queryDate = formatDateToLongString(yesterdayDate);
+  } else {
+    queryDate = formatDateToLongString(queryDate);
   }
 
   try {
     const matches = await MatchData.find({ "matches.matchDate": queryDate });
-    if (matches.length > 0) {
+    if (matches.length) {
       res.status(200).json(matches);
     } else {
       res.status(404).json({ message: "No matches found for the given date" });
