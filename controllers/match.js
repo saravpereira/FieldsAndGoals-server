@@ -76,8 +76,8 @@ exports.getResultsByDates = async (req, res) => {
   }
 };
 
-// Sample query: http://localhost:8080/espn/getMatchesByDate?date=20230907
-exports.getMatchesByDate = async (req, res) => {
+// Sample query: http://localhost:8080/espn/getPastMatchesByDate?date=20230907
+exports.getPastMatchesByDate = async (req, res) => {
   let queryDate = req.query.date;
   
   if (!queryDate) {

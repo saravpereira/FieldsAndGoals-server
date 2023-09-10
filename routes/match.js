@@ -5,6 +5,6 @@ const matchController = require("../controllers/match");
 router.post("", matchController.createMatch);
 router.get('/getPastResults', matchController.getPastResults);
 router.get('/getGamesByDates', matchController.getResultsByDates);
-router.get('/getMatchesByDate', matchController.getMatchesByDate);
+router.get('/getPastMatchesByDate', matchController.getPastMatchesByDate);
 
 module.exports = router;
