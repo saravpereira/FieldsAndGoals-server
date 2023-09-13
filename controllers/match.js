@@ -40,23 +40,29 @@ exports.createMatch = (req, res) => {
 exports.getPastResults = async (_, res) => {
   try {
     const allMatchData = await scrapeController.scrapeEspn(yesterdayDate, yesterdayDate);
-
     const newMatch = new MatchData({
       matches: allMatchData
     });
-
     const savedMatch = await newMatch.save();
 
     if (savedMatch) {
       const successMessage = 'Successfully posted data';
       console.log(successMessage, savedMatch);
-      res.status(200).json({ message: successMessage });
+      if (res) { // Check if res is defined
+        res.status(200).json({ message: successMessage });
+      }
     } else {
-      res.status(500).json({ error: 'Failed to post data' });
+      const errorMessage = 'Failed to post data';
+      console.log(errorMessage);
+      if (res) { // Check if res is defined
+        res.status(500).json({ error: errorMessage });
+      }
     }
   } catch (error) {
     console.error('Error saving data to database:', error);
-    res.status(500).json({ error: error.message });
+    if (res) { // Check if res is defined
+      res.status(500).json({ error: error.message });
+    }
   }
 };
 
