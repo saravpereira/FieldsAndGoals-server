@@ -18,7 +18,7 @@ const app = express();
 
 app.use('/espn', matchRoutes);
 
-cron.schedule('0 23 * * *', async () => { //Execute at 23:00 daily
+cron.schedule('0 0 * * *', async () => { //Execute at 00:00 daily
   console.log('Cron job started at:', new Date());
   try {
     await matchController.getPastResults();
