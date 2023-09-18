@@ -3,7 +3,7 @@ const { espnScoreUrl, defaultLogo } = require("./constants");
 
 async function scrapeEspn(startDate, endDate, res) {
   try {
-    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
     await page.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 7_4_0; like Mac OS X) AppleWebKit/534.49 (KHTML, like Gecko)  Chrome/53.0.1780.199 Mobile Safari/533.3');
