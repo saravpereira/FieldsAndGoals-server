@@ -48,19 +48,19 @@ exports.getPastResults = async (_, res) => {
     if (savedMatch) {
       const successMessage = 'Successfully posted data';
       console.log(successMessage, savedMatch);
-      if (res) { // Check if res is defined
+      if (res) {
         res.status(200).json({ message: successMessage });
       }
     } else {
       const errorMessage = 'Failed to post data';
       console.log(errorMessage);
-      if (res) { // Check if res is defined
+      if (res) {
         res.status(500).json({ error: errorMessage });
       }
     }
   } catch (error) {
     console.error('Error saving data to database:', error);
-    if (res) { // Check if res is defined
+    if (res) {
       res.status(500).json({ error: error.message });
     }
   }
