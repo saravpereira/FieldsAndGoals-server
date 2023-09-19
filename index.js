@@ -15,6 +15,8 @@ main()
   .catch((err) => console.log(err));
 
 const app = express();
+app.use(express.json({limit: "10mb", extended: true}))
+app.use(express.urlencoded({limit: "10mb", extended: true, parameterLimit: 50000}))
 
 app.use('/espn', matchRoutes);
 
@@ -31,3 +33,5 @@ cron.schedule('0 0 * * *', async () => { //Execute at 00:00 daily
 app.listen(8080, () => {
   console.log("Server listening on port 8080");
 });
+
+module.exports = app;
