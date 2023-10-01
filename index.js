@@ -7,7 +7,7 @@ const matchRoutes = require("./routes/match");
 const matchController = require("./controllers/match");
 
 async function main() {
-  await mongoose.connect(process.env.DB);
+  await mongoose.connect(process.env.DATABASE_URL);
 }
 
 main()
