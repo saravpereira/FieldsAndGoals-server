@@ -18,16 +18,17 @@ const app = express();
 
 app.use("/espn", matchRoutes);
 
-// cron.schedule('0 0 * * *', async () => { //Execute at 00:00 daily
-//   console.log('Cron job started at:', new Date());
-//   try {
-//     await matchController.getPastResults();
-//     console.log('Cron job completed successfully at:', new Date());
-//   } catch (error) {
-//     console.log('Cron job failed with error:', error);
-//   }
-// });
+cron.schedule("0 0 * * *", async () => {
+  //Execute at 00:00 daily
+  console.log("Cron job started at:", new Date());
+  try {
+    await matchController.getPastResults();
+    console.log("Cron job completed successfully at:", new Date());
+  } catch (error) {
+    console.log("Cron job failed with error:", error);
+  }
+});
 
 app.listen(process.env.PORT, () => {
-  console.log(`Server listening on port test ${process.env.PORT}`);
+  console.log(`Server listening on port ${process.env.PORT}`);
 });
