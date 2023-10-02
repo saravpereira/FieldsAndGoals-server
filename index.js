@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const cron = require("node-cron");
 require("dotenv").config();
 
-const matchRoutes = require('./routes/match');
-const matchController = require('./controllers/match');
+const matchRoutes = require("./routes/match");
+const matchController = require("./controllers/match");
 
 async function main() {
-  await mongoose.connect(process.env.DB);
+  await mongoose.connect(process.env.DATABASE_URL);
 }
 
 main()
@@ -18,20 +18,21 @@ const app = express();
 app.use(express.json({limit: "10mb", extended: true}))
 app.use(express.urlencoded({limit: "10mb", extended: true, parameterLimit: 50000}))
 
-app.use('/espn', matchRoutes);
+app.use("/espn", matchRoutes);
 
-cron.schedule('0 0 * * *', async () => { //Execute at 00:00 daily
-  console.log('Cron job started at:', new Date());
+cron.schedule("0 0 * * *", async () => {
+  //Execute at 00:00 daily
+  console.log("Cron job started at:", new Date());
   try {
     await matchController.getPastResults();
-    console.log('Cron job completed successfully at:', new Date());
+    console.log("Cron job completed successfully at:", new Date());
   } catch (error) {
-    console.log('Cron job failed with error:', error);
+    console.log("Cron job failed with error:", error);
   }
 });
 
-app.listen(8080, () => {
-  console.log("Server listening on port 8080");
+app.listen(process.env.PORT, () => {
+  console.log(`Server listening on port ${process.env.PORT}`);
 });
 
 module.exports = app;
