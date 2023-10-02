@@ -2,7 +2,7 @@ const { getDateRange, getYesterdayDate, formatDateToLongString } = require('../u
 
 describe('Date Utils', () => {
   test('getDateRange should return correct date range', () => {
-    const { startDate, endDate } = getDateRange('20230918');
+    const { startDate, endDate } = getDateRange('20231005');
     expect(startDate).toBeDefined();
     expect(endDate).toBeDefined();
   });
@@ -13,7 +13,7 @@ describe('Date Utils', () => {
   });
 
   test('formatDateToLongString should format date correctly', () => {
-    const formattedDate = formatDateToLongString('20230918');
-    expect(formattedDate).toBe('September 18, 2023');
+    const formattedDate = formatDateToLongString('20231005');
+    expect(formattedDate).toBe('October 5, 2023');
   });
 });

@@ -4,7 +4,7 @@ require("dotenv").config();
 
 beforeAll(() => {
   console.log('Starting tests...');
-  mongoose.connect(process.env.DB);
+  mongoose.connect(process.env.DATABASE_URL);
 });
 
 afterAll(() => {
