@@ -1,4 +1,8 @@
-const { getDateRange, getYesterdayDate, formatDateToLongString } = require('../utils/dateUtils');
+const {
+  getDateRange,
+  getYesterdayDate,
+  formatDateToLongString,
+} = require('../utils/dateUtils');
 
 describe('Date Utils', () => {
   test('getDateRange should return correct date range', () => {
@@ -7,7 +11,7 @@ describe('Date Utils', () => {
     expect(endDate).toBeDefined();
   });
 
-  test('getYesterdayDate should return yesterday\'s date', () => {
+  test("getYesterdayDate should return yesterday's date", () => {
     const yesterday = getYesterdayDate();
     expect(yesterday).toBeDefined();
   });

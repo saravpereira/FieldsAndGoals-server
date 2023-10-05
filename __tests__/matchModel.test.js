@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Match = require('../models/match');
-require("dotenv").config();
+require('dotenv').config();
 
 beforeAll(() => {
   console.log('Starting tests...');

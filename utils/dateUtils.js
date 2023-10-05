@@ -16,21 +16,23 @@ function getDateRange(userEndDate) {
     userEnd.setHours(0, 0, 0, 0);
 
     if (userEnd < today) {
-      throw new Error("endDate should not be set for any time before today");
+      throw new Error('endDate should not be set for any time before today');
     }
 
     const diffInDays = (userEnd - tomorrow) / (1000 * 60 * 60 * 24);
 
     if (diffInDays > 14) {
-      throw new Error("endDate should not be more than 14 days from startDate");
+      throw new Error('endDate should not be more than 14 days from startDate');
     }
   }
 
-  const endDate = userEndDate || formatDate(new Date(tomorrow.setDate(tomorrow.getDate() + 6)));
+  const endDate =
+    userEndDate ||
+    formatDate(new Date(tomorrow.setDate(tomorrow.getDate() + 6)));
 
   return {
     startDate,
-    endDate
+    endDate,
   };
 }
 
@@ -60,5 +62,5 @@ function formatDateToLongString(dateString) {
 module.exports = {
   getDateRange,
   getYesterdayDate,
-  formatDateToLongString
+  formatDateToLongString,
 };
