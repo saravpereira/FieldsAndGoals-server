@@ -24,7 +24,7 @@ async function scrapeEspn(startDate, endDate, res) {
       parseInt(endDate.substring(6, 8))
     );
 
-    let current = new Date(start);
+    const current = new Date(start);
 
     while (current <= end) {
       const year = current.getFullYear();

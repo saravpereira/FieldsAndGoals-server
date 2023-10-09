@@ -23,7 +23,7 @@ app.use(
 app.use('/espn', matchRoutes);
 
 cron.schedule('0 0 * * *', async () => {
-  //Execute at 00:00 daily
+  // Execute at 00:00 daily
   console.log('Cron job started at:', new Date());
   try {
     await matchController.getPastResults();
