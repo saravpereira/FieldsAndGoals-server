@@ -1,13 +1,21 @@
 const mongoose = require('mongoose');
 const Match = require('../models/match');
-require("dotenv").config();
+require('dotenv').config();
 
 beforeAll(() => {
   console.log('Starting tests...');
   mongoose.connect(process.env.DATABASE_URL);
 });
 
-afterAll(() => {
+afterAll(async () => {
+  console.log('Deleting test data...');
+  await Match.deleteMany({ 'matches.homeTeam': 'Team A' });
+  console.log('Test data deleted.');
+
+  console.log('Disconnecting from database...');
+  await mongoose.disconnect();
+  console.log('Disconnected from database.');
+
   console.log('All tests completed.');
 });
 
