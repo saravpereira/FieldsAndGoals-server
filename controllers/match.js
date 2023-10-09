@@ -68,7 +68,7 @@ exports.getPastResults = async (_, res) => {
 
 /**
    * User can specify endDate by appending it as a query parameter:
-   * http://localhost:8080/espn/getGamesByDates?endDate=20230912
+   * http://localhost:8080/espn/getGamesByDates?endDate=20230921
    */
 exports.getResultsByDates = async (req, res) => {
   const userEndDate = req.query.endDate;
@@ -76,7 +76,13 @@ exports.getResultsByDates = async (req, res) => {
   try {
     const { startDate, endDate } = getDateRange(userEndDate);
     const scrapedData = await scrapeController.scrapeEspn(startDate, endDate);
-    res.status(200).json(scrapedData);
+
+    const cleanedData = scrapedData.map(({ _id, ...rest }) => rest);
+    const formattedData = {
+      matches: cleanedData
+    };
+
+    res.status(200).json(formattedData);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
