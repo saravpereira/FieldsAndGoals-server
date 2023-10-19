@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const matchSchema = mongoose.Schema(
   {
@@ -43,7 +43,7 @@ const matchSchema = mongoose.Schema(
       },
     ],
   },
-  { collection: "matchData" }
+  { collection: 'matchData' }
 );
 
-module.exports = mongoose.model("Match", matchSchema);
+module.exports = mongoose.model('Match', matchSchema);
