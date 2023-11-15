@@ -26,7 +26,6 @@ async function scrapeEspn(startDate, endDate, res) {
 
     const current = new Date(start);
 
-    // eslint-disable-next-line no-unmodified-loop-condition
     while (current <= end) {
       const year = current.getFullYear();
       const month = String(current.getMonth() + 1).padStart(2, '0');
