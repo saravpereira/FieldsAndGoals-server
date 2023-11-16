@@ -1,4 +1,4 @@
-const CACHE_LIFETIME = 12 * 60 * 60 * 1000;
+const CACHE_LIFETIME = 30 * 24 * 60 * 60 * 1000;
 const cache = {};
 
 const setCache = (key, data) => {
