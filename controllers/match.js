@@ -5,6 +5,7 @@ const {
   formatDateToLongString,
 } = require('../utils/dateUtils');
 const scrapeController = require('./webscrapeController');
+const { setCache, getCache } = require('../utils/cache');
 
 const yesterdayDate = getYesterdayDate();
 
@@ -75,25 +76,36 @@ exports.getPastResults = async (_, res) => {
 
 /**
  * User can specify endDate by appending it as a query parameter:
- * http://localhost:8080/espn/getGamesByDates?endDate=20230921
+ * http://localhost:8080/espn/getGamesByDates?endDate=20231120
  */
 exports.getResultsByDates = async (req, res) => {
-  const userEndDate = req.query.endDate;
-
-  try {
-    const { startDate, endDate } = getDateRange(userEndDate);
-    const scrapedData = await scrapeController.scrapeEspn(startDate, endDate);
-
-    const cleanedData = scrapedData.map(({ _id, ...rest }) => rest);
-    const formattedData = {
-      matches: cleanedData,
-    };
-
-    res.status(200).json(formattedData);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+    const userEndDate = req.query.endDate;
+  
+    try {
+      const { startDate, endDate } = getDateRange(userEndDate);
+      const cacheKey = `${startDate}-${endDate}`;
+  
+      const cachedData = getCache(cacheKey);
+      if (cachedData) {
+        return res.status(200).json({
+          ...cachedData,
+          message: 'Data retrieved from cache'
+        });
+      }
+  
+      const scrapedData = await scrapeController.scrapeEspn(startDate, endDate);
+  
+      setCache(cacheKey, scrapedData);
+  
+      res.status(200).json({
+        data: scrapedData,
+        isCached: false,
+        message: 'Freshly scraped data'
+      });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };  
 
 // Sample query: http://localhost:8080/espn/getPastMatchesByDate?date=20230907
 exports.getPastMatchesByDate = async (req, res) => {
