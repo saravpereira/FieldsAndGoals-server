@@ -17,7 +17,7 @@
   "rules": {
     "prettier/prettier": "error",
     "no-unmodified-loop-condition": "off"
-  },  
+  },
   "globals": {
     "document": "readonly",
     "window": "readonly"
