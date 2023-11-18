@@ -85,7 +85,7 @@ exports.getResultsByDates = async (req, res) => {
     const { startDate, endDate } = getDateRange(userEndDate);
     const cacheKey = `${startDate}-${endDate}`;
 
-    const cachedData = getCache(cacheKey);
+    const cachedData = await getCache(cacheKey);
     if (cachedData) {
       return res.status(200).json({
         ...cachedData,
@@ -95,7 +95,7 @@ exports.getResultsByDates = async (req, res) => {
 
     const scrapedData = await scrapeController.scrapeEspn(startDate, endDate);
 
-    setCache(cacheKey, scrapedData);
+    await setCache(cacheKey, scrapedData);
 
     res.status(200).json({
       data: scrapedData,

@@ -1,29 +1,31 @@
-const CACHE_LIFETIME = 30 * 24 * 60 * 60 * 1000;
-const cache = {};
+const Cache = require('../models/cache');
+const CACHE_LIFETIME = 30 * 24 * 60 * 60 * 1000; // 30 days
 
-const setCache = (key, data) => {
-  cache[key] = {
-    data,
-    timestamp: Date.now(),
-  };
+const setCache = async (key, data) => {
+  const timestamp = new Date();
+  await Cache.findOneAndUpdate(
+    { key },
+    { data, timestamp },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  );
 };
 
-const getCache = (key) => {
-  const entry = cache[key];
-  if (entry && Date.now() - entry.timestamp < CACHE_LIFETIME) {
+const getCache = async (key) => {
+  const cacheEntry = await Cache.findOne({ key });
+  if (cacheEntry && new Date() - cacheEntry.timestamp < CACHE_LIFETIME) {
     return {
-      data: entry.data,
+      data: cacheEntry.data,
       isCached: true,
     };
   }
   return null;
 };
 
-const clearCache = (key = null) => {
+const clearCache = async (key = null) => {
   if (key) {
-    delete cache[key];
+    await Cache.deleteOne({ key });
   } else {
-    Object.keys(cache).forEach((k) => delete cache[k]);
+    await Cache.deleteMany({});
   }
 };
 
