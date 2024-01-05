@@ -48,16 +48,29 @@ exports.getPastResults = async (_, res) => {
       yesterdayDate,
       yesterdayDate
     );
-    const newMatch = new MatchData({
-      matches: allMatchData,
-    });
-    const savedMatch = await newMatch.save();
 
-    if (savedMatch) {
+    const saveMatchPromises = allMatchData.map((matchData) => {
+      const newMatch = new MatchData({
+        matchDate: matchData.matchDate,
+        league: matchData.league,
+        homeTeam: matchData.homeTeam,
+        awayTeam: matchData.awayTeam,
+        homeScore: matchData.homeScore,
+        awayScore: matchData.awayScore,
+        matchStatus: matchData.matchStatus,
+        homeLogo: matchData.homeLogo,
+        awayLogo: matchData.awayLogo,
+      });
+      return newMatch.save();
+    });
+
+    const savedMatches = await Promise.all(saveMatchPromises);
+
+    if (savedMatches.length) {
       const successMessage = 'Successfully posted data';
-      console.log(successMessage, savedMatch);
+      console.log(successMessage, savedMatches);
       if (res) {
-        res.status(200).json({ message: successMessage });
+        res.status(200).json({ message: successMessage, savedMatches });
       }
     } else {
       const errorMessage = 'Failed to post data';
@@ -79,33 +92,33 @@ exports.getPastResults = async (_, res) => {
  * http://localhost:8080/espn/getGamesByDates?endDate=20231125
  */
 exports.getResultsByDates = async (req, res) => {
-    const userEndDate = req.query.endDate;
-  
-    try {
-      const { startDate, endDate } = getDateRange(userEndDate);
-      const cacheKey = `${startDate}-${endDate}`;
-  
-      const cachedData = getCache(cacheKey);
-      if (cachedData) {
-        return res.status(200).json({
-          ...cachedData,
-          message: 'Data retrieved from cache',
-        });
-      }
-  
-      const scrapedData = await scrapeController.scrapeEspn(startDate, endDate);
-  
-      setCache(cacheKey, scrapedData);
-  
-      res.status(200).json({
-        data: scrapedData,
-        isCached: false,
-        message: 'Freshly scraped data',
+  const userEndDate = req.query.endDate;
+
+  try {
+    const { startDate, endDate } = getDateRange(userEndDate);
+    const cacheKey = `${startDate}-${endDate}`;
+
+    const cachedData = getCache(cacheKey);
+    if (cachedData) {
+      return res.status(200).json({
+        ...cachedData,
+        message: 'Data retrieved from cache',
       });
-    } catch (error) {
-      res.status(400).json({ error: error.message });
     }
-  };
+
+    const scrapedData = await scrapeController.scrapeEspn(startDate, endDate);
+
+    setCache(cacheKey, scrapedData);
+
+    res.status(200).json({
+      data: scrapedData,
+      isCached: false,
+      message: 'Freshly scraped data',
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 // Sample query: http://localhost:8080/espn/getPastMatchesByDate?date=20230907
 exports.getPastMatchesByDate = async (req, res) => {
